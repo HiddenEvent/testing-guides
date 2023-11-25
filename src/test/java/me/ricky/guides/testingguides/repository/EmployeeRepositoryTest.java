@@ -129,5 +129,21 @@ class EmployeeRepositoryTest {
         assertThat(deletedEmployeeOptional).isEmpty();
 
     }
+    @Test
+    void jpql_테스트() {
+        //given
+        Employee employee = Employee.builder()
+                .firstName("Ricky")
+                .lastName("Kim")
+                .email("aa@a.com")
+                .build();
+        employeeRepository.save(employee);
+
+        //when
+        Employee savedEmployee = employeeRepository.findByJPQL("Ricky", "Kim");
+
+        //then
+        assertThat(savedEmployee).isNotNull();
+    }
 
 }
