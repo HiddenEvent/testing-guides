@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 class EmployeeRepositoryTest {
     @Autowired
@@ -53,5 +52,39 @@ class EmployeeRepositoryTest {
         //then
         assertThat(employees).isNotNull();
         assertThat(employees.size()).isEqualTo(2);
+    }
+    @Test
+    void 상세() {
+        //given
+        Employee employee = Employee.builder()
+                .firstName("Ricky")
+                .lastName("Kim")
+                .email("aa@a.com")
+                .build();
+        employeeRepository.save(employee);
+
+        //when
+        Employee employeeDB = employeeRepository.findById(employee.getId()).get();
+
+        //then
+        assertThat(employeeDB).isNotNull();
+    }
+
+    @Test
+    void 이메일_검색() {
+        //given
+        Employee employee = Employee.builder()
+                .firstName("Ricky")
+                .lastName("Kim")
+                .email("aa@a.com")
+                .build();
+        employeeRepository.save(employee);
+
+        //when
+        Employee employeeDB = employeeRepository.findByEmail(employee.getEmail()).get();
+
+        //then
+        assertThat(employeeDB).isNotNull();
+        assertThat(employeeDB.getEmail()).isEqualTo(employee.getEmail());
     }
 }
