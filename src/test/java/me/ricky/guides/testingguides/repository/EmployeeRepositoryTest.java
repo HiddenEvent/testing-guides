@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -109,4 +110,24 @@ class EmployeeRepositoryTest {
         assertThat(updatedEmployee.getLastName()).isEqualTo("Kim1");
 
     }
+
+    @Test
+    void 삭제() {
+        //given
+        Employee employee = Employee.builder()
+                .firstName("Ricky")
+                .lastName("Kim")
+                .email("aa@a.com")
+                .build();
+        employeeRepository.save(employee);
+
+        //when
+        employeeRepository.delete(employee);
+        Optional<Employee> deletedEmployeeOptional = employeeRepository.findById(employee.getId());
+
+        //then
+        assertThat(deletedEmployeeOptional).isEmpty();
+
+    }
+
 }
