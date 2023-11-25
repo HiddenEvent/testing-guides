@@ -87,4 +87,25 @@ class EmployeeRepositoryTest {
         assertThat(employeeDB).isNotNull();
         assertThat(employeeDB.getEmail()).isEqualTo(employee.getEmail());
     }
+    @Test
+    void 수정() {
+        //given
+        Employee employee = Employee.builder()
+                .firstName("Ricky")
+                .lastName("Kim")
+                .email("aa@a.com")
+                .build();
+        employeeRepository.save(employee);
+    
+        //when
+        Employee savedEmployee = employeeRepository.findById(employee.getId()).get();
+        savedEmployee.setFirstName("Ricky1");
+        savedEmployee.setLastName("Kim1");
+        Employee updatedEmployee = employeeRepository.save(savedEmployee);
+
+        //then
+        assertThat(updatedEmployee.getFirstName()).isEqualTo("Ricky1");
+        assertThat(updatedEmployee.getLastName()).isEqualTo("Kim1");
+
+    }
 }
