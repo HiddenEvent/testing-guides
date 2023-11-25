@@ -101,7 +101,8 @@ class EmployeeRepositoryTest {
         Employee savedEmployee = employeeRepository.findById(employee.getId()).get();
         savedEmployee.setFirstName("Ricky1");
         savedEmployee.setLastName("Kim1");
-        Employee updatedEmployee = employeeRepository.save(savedEmployee);
+        Employee updatedEmployee = employeeRepository.saveAndFlush(savedEmployee);
+
 
         //then
         assertThat(updatedEmployee.getFirstName()).isEqualTo("Ricky1");
