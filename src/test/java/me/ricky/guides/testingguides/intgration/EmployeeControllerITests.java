@@ -13,6 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -33,7 +37,6 @@ public class EmployeeControllerITests {
     void setup() {
         employeeRepository.deleteAll();
         employee = Employee.builder()
-                .id(1L)
                 .firstName("Ricky")
                 .lastName("Kim")
                 .email("aa@a.com")
@@ -52,10 +55,30 @@ public class EmployeeControllerITests {
         //then
         response.andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(employee.getId()))
                 .andExpect(jsonPath("$.firstName").value(employee.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(employee.getLastName()))
                 .andExpect(jsonPath("$.email").value(employee.getEmail()));
 
     }
+    @Test
+    void it_전체조회() throws Exception {
+        //given
+        Employee employee1 = Employee.builder()
+                .firstName("Ricky1")
+                .lastName("Kim1")
+                .email("aa1@a.com").build();
+        List<Employee> employees = List.of(employee, employee1);
+        employeeRepository.saveAll(employees);
+
+        //when
+        ResultActions response = mockMvc.perform(get("/api/employees"));
+
+        //then
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(employees.size()));
+
+    }
+
+
 }
