@@ -1,0 +1,17 @@
+version: "3"
+services:
+  jpa-test:
+    image: mysql:8.0.23
+    ports:
+      - 3307:3306
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ems
+      MYSQL_USER: emsadmin
+      MYSQL_PASSWORD: password
+    command: # 명령어 실행
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./script/init.sql:/docker-entrypoint-initdb.d/init.sql
