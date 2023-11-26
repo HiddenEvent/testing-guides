@@ -110,7 +110,8 @@ class EmployeeControllerTest {
                 .lastName("updL")
                 .email("upd@a.com")
                 .build();
-        given(employeeService.updateEmployee(any())).willReturn(updatedEmployee);
+        given(employeeService.updateEmployee(any(Employee.class)))
+                .willAnswer(invocation -> invocation.getArgument(0));
 
         //when
         ResultActions perform = mockMvc.perform(put("/api/employees/{id}", employee.getId())
