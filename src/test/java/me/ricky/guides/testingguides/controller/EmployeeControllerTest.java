@@ -14,8 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -126,4 +125,17 @@ class EmployeeControllerTest {
                 .andExpect(jsonPath("$.email").value(updatedEmployee.getEmail()));
 
     }
+    @Test
+    void controller_삭제() throws Exception {
+        //given
+        willDoNothing().given(employeeService).deleteEmployee(employee.getId());
+
+        //when
+        ResultActions response = mockMvc.perform(delete("/api/employees/{id}", employee.getId()));
+
+        //then
+        response.andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
 }
