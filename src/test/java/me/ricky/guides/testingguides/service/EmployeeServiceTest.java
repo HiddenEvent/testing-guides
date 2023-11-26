@@ -3,7 +3,6 @@ package me.ricky.guides.testingguides.service;
 import me.ricky.guides.testingguides.exception.ResourceNotFoundException;
 import me.ricky.guides.testingguides.model.Employee;
 import me.ricky.guides.testingguides.repository.EmployeeRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -50,7 +50,7 @@ class EmployeeServiceTest {
         Employee savedEmployee = employeeService.saveEmployee(employee);
 
         //then
-        Assertions.assertThat(savedEmployee).isNotNull();
+        assertThat(savedEmployee).isNotNull();
     }
     @Test
     void service_저장_email중복() {
@@ -79,8 +79,8 @@ class EmployeeServiceTest {
         List<Employee> employees = employeeService.getAllEmployees();
 
         //then
-        Assertions.assertThat(employees).isNotNull();
-        Assertions.assertThat(employees).hasSize(2);
+        assertThat(employees).isNotNull();
+        assertThat(employees).hasSize(2);
     }
 
     @Test
@@ -92,8 +92,21 @@ class EmployeeServiceTest {
         List<Employee> employees = employeeService.getAllEmployees();
 
         //then
-        Assertions.assertThat(employees).isEmpty();
-        Assertions.assertThat(employees).hasSize(0);
+        assertThat(employees).isEmpty();
+        assertThat(employees).hasSize(0);
+    }
+
+    @Test
+    void service_상세() {
+        //given
+        given(employeeRepository.findById(1L)).willReturn(Optional.of(employee));
+
+        //when
+        Employee employeeDB = employeeService.getEmployeeById(1L);
+
+        //then
+        assertThat(employeeDB).isNotNull();
+
     }
 
 }
