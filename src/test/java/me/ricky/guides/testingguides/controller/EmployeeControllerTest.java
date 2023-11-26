@@ -82,4 +82,23 @@ class EmployeeControllerTest {
 
     }
 
+    @Test
+    void controller_상세() throws Exception {
+        //given
+        given(employeeService.getEmployeeById(any()))
+                .willReturn(employee);
+
+        //when
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employee.getId()));
+
+        //then
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(employee.getId()))
+                .andExpect(jsonPath("$.firstName").value(employee.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(employee.getLastName()))
+                .andExpect(jsonPath("$.email").value(employee.getEmail()));
+
+    }
+
 }

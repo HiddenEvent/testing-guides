@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.ricky.guides.testingguides.model.Employee;
 import me.ricky.guides.testingguides.service.EmployeeService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,5 +23,9 @@ public class EmployeeController {
     @GetMapping
     public List<Employee> getAllemployees() {
         return employeeService.getAllEmployees();
+    }
+    @GetMapping("/{id}")
+    public Employee getEmployeeById(@PathVariable(name = "id") Long id) {
+        return employeeService.getEmployeeById(id);
     }
 }
