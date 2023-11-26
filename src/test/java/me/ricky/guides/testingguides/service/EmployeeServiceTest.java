@@ -1,5 +1,6 @@
 package me.ricky.guides.testingguides.service;
 
+import me.ricky.guides.testingguides.exception.ResourceNotFoundException;
 import me.ricky.guides.testingguides.model.Employee;
 import me.ricky.guides.testingguides.repository.EmployeeRepository;
 import org.assertj.core.api.Assertions;
@@ -12,7 +13,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
@@ -44,7 +49,17 @@ class EmployeeServiceTest {
 
         //then
         Assertions.assertThat(savedEmployee).isNotNull();
+    }
+    @Test
+    void service_저장_email중복() {
+        //given
+        given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.of(employee));
 
+        //when
+        assertThrows(ResourceNotFoundException.class, () -> employeeService.saveEmployee(employee));
+
+        //then
+        verify(employeeRepository, never()).save(any(Employee.class));
     }
 
 }
