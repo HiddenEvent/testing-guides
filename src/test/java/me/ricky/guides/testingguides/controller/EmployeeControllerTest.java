@@ -1,29 +1,24 @@
 package me.ricky.guides.testingguides.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.ricky.guides.testingguides.model.Employee;
 import me.ricky.guides.testingguides.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @WebMvcTest
 class EmployeeControllerTest {
@@ -57,12 +52,12 @@ class EmployeeControllerTest {
                 .content(objectMapper.writeValueAsString(employee)));
 
         //then
-        response.andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(employee.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(employee.getFirstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(employee.getLastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(employee.getEmail()));
+        response.andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(employee.getId()))
+                .andExpect(jsonPath("$.firstName").value(employee.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(employee.getLastName()))
+                .andExpect(jsonPath("$.email").value(employee.getEmail()));
 
     }
 
@@ -81,9 +76,9 @@ class EmployeeControllerTest {
         ResultActions response = mockMvc.perform(get("/api/employees"));
 
         //then
-        response.andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(employees.size()));
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(employees.size()));
 
     }
 
