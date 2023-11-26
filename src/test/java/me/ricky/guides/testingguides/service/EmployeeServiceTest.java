@@ -109,4 +109,21 @@ class EmployeeServiceTest {
 
     }
 
+    @Test
+    void service_수정() {
+        //given
+        given(employeeRepository.save(employee)).willReturn(employee);
+        employee.setEmail("upd@a.com");
+        employee.setFirstName("upd");
+
+        //when
+        Employee updatedEmployee = employeeService.updateEmployee(employee);
+
+        //then
+        assertThat(updatedEmployee).isNotNull();
+        assertThat(updatedEmployee.getEmail()).isEqualTo("upd@a.com");
+        assertThat(updatedEmployee.getFirstName()).isEqualTo("upd");
+
+    }
+
 }
