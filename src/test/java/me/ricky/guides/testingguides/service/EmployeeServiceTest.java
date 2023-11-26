@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,6 +61,25 @@ class EmployeeServiceTest {
 
         //then
         verify(employeeRepository, never()).save(any(Employee.class));
+    }
+
+    @Test
+    void service_전체조회() {
+        //given
+        Employee employee1 = Employee.builder()
+                .id(1L)
+                .firstName("Ricky1")
+                .lastName("Kim1")
+                .email("aa1@a.com")
+                .build();
+        given(employeeRepository.findAll()).willReturn(List.of(employee, employee1));
+
+        //when
+        List<Employee> employees = employeeService.getAllEmployees();
+
+        //then
+        Assertions.assertThat(employees).isNotNull();
+        Assertions.assertThat(employees).hasSize(2);
     }
 
 }
