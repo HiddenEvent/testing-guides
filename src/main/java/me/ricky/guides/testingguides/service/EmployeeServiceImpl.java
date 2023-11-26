@@ -6,6 +6,8 @@ import me.ricky.guides.testingguides.model.Employee;
 import me.ricky.guides.testingguides.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
@@ -13,10 +15,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee saveEmployee(Employee employee) {
-        employeeRepository.findByEmail(employee.getEmail())
-                .ifPresent(e -> {
-                    throw new ResourceNotFoundException("Email already exists");
-                });
+        Optional<Employee> existsEmployee = employeeRepository.findByEmail(employee.getEmail());
+        if (existsEmployee.isPresent()) {
+            throw new ResourceNotFoundException("Employee with email " + employee.getEmail() + " already exists");
+        }
+
         return employeeRepository.save(employee);
     }
 }
