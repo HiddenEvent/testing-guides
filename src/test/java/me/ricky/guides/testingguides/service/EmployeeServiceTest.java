@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,6 +81,19 @@ class EmployeeServiceTest {
         //then
         Assertions.assertThat(employees).isNotNull();
         Assertions.assertThat(employees).hasSize(2);
+    }
+
+    @Test
+    void service_전체조회_empty() {
+        //given
+        given(employeeRepository.findAll()).willReturn(Collections.emptyList());
+
+        //when
+        List<Employee> employees = employeeService.getAllEmployees();
+
+        //then
+        Assertions.assertThat(employees).isEmpty();
+        Assertions.assertThat(employees).hasSize(0);
     }
 
 }
