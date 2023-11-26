@@ -1,5 +1,6 @@
 package me.ricky.guides.testingguides.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.ricky.guides.testingguides.model.Employee;
 import me.ricky.guides.testingguides.service.EmployeeService;
@@ -101,4 +102,27 @@ class EmployeeControllerTest {
 
     }
 
+    @Test
+    void controller_수정() throws Exception {
+        //given
+        Employee updatedEmployee = Employee.builder()
+                .firstName("updF")
+                .lastName("updL")
+                .email("upd@a.com")
+                .build();
+        given(employeeService.updateEmployee(any())).willReturn(updatedEmployee);
+
+        //when
+        ResultActions perform = mockMvc.perform(put("/api/employees/{id}", employee.getId())
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updatedEmployee)));
+
+        //then
+        perform.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value(updatedEmployee.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(updatedEmployee.getLastName()))
+                .andExpect(jsonPath("$.email").value(updatedEmployee.getEmail()));
+
+    }
 }
