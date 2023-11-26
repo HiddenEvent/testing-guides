@@ -6,15 +6,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
@@ -23,22 +21,23 @@ class EmployeeServiceTest {
     @InjectMocks
     private EmployeeServiceImpl employeeService;
 
+    private Employee employee;
+
     @BeforeEach
     void setup() {
-
-    }
-
-    @Test
-    void service_저장() {
-        //given
-        Employee employee = Employee.builder()
+        employee = Employee.builder()
                 .id(1L)
                 .firstName("Ricky")
                 .lastName("Kim")
                 .email("aa@a.com")
                 .build();
-        BDDMockito.given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
-        BDDMockito.given(employeeRepository.save(employee)).willReturn(employee);
+    }
+
+    @Test
+    void service_저장() {
+        //given
+        given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
+        given(employeeRepository.save(employee)).willReturn(employee);
 
         //when
         Employee savedEmployee = employeeService.saveEmployee(employee);
