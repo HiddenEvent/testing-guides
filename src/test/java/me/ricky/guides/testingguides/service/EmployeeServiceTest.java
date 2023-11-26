@@ -5,21 +5,27 @@ import me.ricky.guides.testingguides.repository.EmployeeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
+    @Mock
     private EmployeeRepository employeeRepository;
-    private EmployeeService employeeService;
+    @InjectMocks
+    private EmployeeServiceImpl employeeService;
 
     @BeforeEach
     void setup() {
-        employeeRepository = Mockito.mock(EmployeeRepository.class);
-        employeeService = new EmployeeServiceImpl(employeeRepository);
+
     }
 
     @Test
