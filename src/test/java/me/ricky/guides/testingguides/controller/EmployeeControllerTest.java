@@ -18,8 +18,11 @@ import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @WebMvcTest
@@ -60,6 +63,27 @@ class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(employee.getFirstName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(employee.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(employee.getEmail()));
+
+    }
+
+    @Test
+    void controller_전체조회() throws Exception {
+        //given
+        Employee employee1 = Employee.builder()
+                .id(2L)
+                .firstName("Ricky1")
+                .lastName("Kim1")
+                .email("aa1@a.com").build();
+        List<Employee> employees = List.of(employee, employee1);
+        given(employeeService.getAllEmployees()).willReturn(employees);
+
+        //when
+        ResultActions response = mockMvc.perform(get("/api/employees"));
+
+        //then
+        response.andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(employees.size()));
 
     }
 
