@@ -4,16 +4,15 @@ import lombok.RequiredArgsConstructor;
 import me.ricky.guides.testingguides.model.Employee;
 import me.ricky.guides.testingguides.service.EmployeeService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/employees")
+@RequestMapping(EmployeeController.BASE_URL)
 @RequiredArgsConstructor
 public class EmployeeController {
-
+    public static final String BASE_URL = "/api/employees";
     private final EmployeeService employeeService;
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
