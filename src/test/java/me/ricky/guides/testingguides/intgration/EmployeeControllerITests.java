@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -120,6 +121,18 @@ public class EmployeeControllerITests {
                 .andExpect(jsonPath("$.lastName").value(updatedEmployee.getLastName()))
                 .andExpect(jsonPath("$.email").value(updatedEmployee.getEmail()));
 
+    }
+    @Test
+    void it_삭제() throws Exception {
+        //given
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        //when
+        ResultActions response = mockMvc.perform(delete("/api/employees/{id}", savedEmployee.getId()));
+
+        //then
+        response.andDo(print())
+                .andExpect(status().isNoContent());
     }
 
 }
