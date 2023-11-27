@@ -17,8 +17,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,6 +96,30 @@ public class EmployeeControllerITests {
                 .andExpect(jsonPath("$.email").value(employee.getEmail()));
 
     }
+    @Test
+    void it_수정() throws Exception {
+        //given
+        Employee savedEmployee = employeeRepository.save(employee);
 
+        Employee updatedEmployee = Employee.builder()
+                .firstName("updF")
+                .lastName("updL")
+                .email("upd@a.com")
+                .build();
+
+
+        //when
+        ResultActions perform = mockMvc.perform(put("/api/employees/{id}", savedEmployee.getId())
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updatedEmployee)));
+
+        //then
+        perform.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value(updatedEmployee.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(updatedEmployee.getLastName()))
+                .andExpect(jsonPath("$.email").value(updatedEmployee.getEmail()));
+
+    }
 
 }
