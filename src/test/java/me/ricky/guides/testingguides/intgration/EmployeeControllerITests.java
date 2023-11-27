@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -77,6 +78,23 @@ public class EmployeeControllerITests {
         response.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(employees.size()));
+
+    }
+
+    @Test
+    void it_상세() throws Exception {
+        //given
+        employee = employeeRepository.save(employee);
+
+        //when
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employee.getId()));
+
+        //then
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.firstName").value(employee.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(employee.getLastName()))
+                .andExpect(jsonPath("$.email").value(employee.getEmail()));
 
     }
 
