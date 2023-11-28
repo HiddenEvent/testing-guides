@@ -1,5 +1,6 @@
 package me.ricky.guides.testingguides.repository;
 
+import me.ricky.guides.testingguides.intgration.AbstractContainerBaseTest;
 import me.ricky.guides.testingguides.model.Employee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class EmployeeRepositoryIT {
+class EmployeeRepositoryIT extends AbstractContainerBaseTest {
     @Autowired
     private EmployeeRepository employeeRepository;
     private Employee employee;
