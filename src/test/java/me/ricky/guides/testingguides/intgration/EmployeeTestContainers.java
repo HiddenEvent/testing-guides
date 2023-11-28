@@ -27,22 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@Testcontainers
-class EmployeeTestContainers {
-    @Container
-    private static final MySQLContainer mySQLContainer = new MySQLContainer("mysql:8.0.23")
-            .withDatabaseName("ems")
-            .withUsername("emsuser")
-            .withPassword("password");
-
-    @DynamicPropertySource
-    public static void dynamicPropertySource(DynamicPropertyRegistry registry) {
-        // mysqlContainer를 어플리케이션컨텍스트와 연결시키는 작업
-        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mySQLContainer::getUsername);
-        registry.add("spring.datasource.password", mySQLContainer::getPassword);
-    }
-
+class EmployeeTestContainers extends AbstractionBaseTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -63,12 +48,6 @@ class EmployeeTestContainers {
 
     @Test
     void it_생성() throws Exception {
-        // mySQLContainer 접속 정보
-        System.out.println(mySQLContainer.getJdbcUrl());
-        System.out.println(mySQLContainer.getUsername());
-        System.out.println(mySQLContainer.getPassword());
-        System.out.println(mySQLContainer.getDatabaseName());
-
         //given
 
         //when
