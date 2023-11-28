@@ -1,6 +1,6 @@
 version: "3"
 services:
-  jpa-test:
+  testing-mysql:
     image: mysql:8.0.23
     ports:
       - 3307:3306
@@ -15,3 +15,15 @@ services:
       - --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./script/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  testing-mongo:
+    image: mongo
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "password"
+      MONGO_INITDB_DATABASE: "admin"
+    volumes:
+      - ./mongodb:/data/db
+      - ./script/init.js:/docker-entrypoint-initdb.d/init.js
