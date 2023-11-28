@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.containers.MySQLContainer;
@@ -32,6 +34,14 @@ class EmployeeTestContainers {
             .withDatabaseName("ems")
             .withUsername("emsuser")
             .withPassword("password");
+
+    @DynamicPropertySource
+    public static void dynamicPropertySource(DynamicPropertyRegistry registry) {
+        // mysqlContainer를 어플리케이션컨텍스트와 연결시키는 작업
+        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mySQLContainer::getUsername);
+        registry.add("spring.datasource.password", mySQLContainer::getPassword);
+    }
 
     @Autowired
     private MockMvc mockMvc;
