@@ -23,11 +23,18 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    /* webflux 의존 설정 추가 */
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    /* non-blocking 처리를 위한 MongoDB 의존 설정 추가 */
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+
+
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     /* testContainer 사용*/
@@ -35,6 +42,8 @@ dependencies {
     testImplementation "org.testcontainers:testcontainers:1.19.3"
     testImplementation "org.testcontainers:junit-jupiter:1.19.3"
     testImplementation "org.testcontainers:mysql:1.19.3"
+    /* non-blocking 테스트용 */
+    testImplementation 'io.projectreactor:reactor-test'
 }
 
 tasks.named('test') {
