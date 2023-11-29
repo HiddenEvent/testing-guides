@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.ricky.guides.testingguides.dto.EmployeeDto;
 import me.ricky.guides.testingguides.service.EmployeeReactiveService;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RestController
@@ -18,5 +19,9 @@ public class EmployeeReactiveController {
     @GetMapping("{id}")
     public Mono<EmployeeDto> getEmployeeById(@PathVariable("id") String id) {
         return employeeReactiveService.getEmployeeById(id);
+    }
+    @GetMapping
+    public Flux<EmployeeDto> getAllEmployees() {
+        return employeeReactiveService.getAllEmployees();
     }
 }

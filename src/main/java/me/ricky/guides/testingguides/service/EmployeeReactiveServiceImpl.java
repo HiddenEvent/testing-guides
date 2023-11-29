@@ -6,6 +6,7 @@ import me.ricky.guides.testingguides.mapper.EmployeeMapper;
 import me.ricky.guides.testingguides.model.EmployeeDoc;
 import me.ricky.guides.testingguides.repository.EmployeeReactiveRepository;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
@@ -23,5 +24,13 @@ public class EmployeeReactiveServiceImpl implements EmployeeReactiveService {
 
         return employeeReactiveRepository.findById(id)
                 .map(EmployeeMapper::toDto);
+    }
+
+    @Override
+    public Flux<EmployeeDto> getAllEmployees() {
+
+        return employeeReactiveRepository.findAll()
+                .map(EmployeeMapper::toDto)
+                .switchIfEmpty(Flux.empty());
     }
 }
