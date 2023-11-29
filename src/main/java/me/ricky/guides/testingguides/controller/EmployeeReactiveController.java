@@ -24,4 +24,8 @@ public class EmployeeReactiveController {
     public Flux<EmployeeDto> getAllEmployees() {
         return employeeReactiveService.getAllEmployees();
     }
+    @PutMapping("{id}")
+    public Mono<EmployeeDto> updateEmployee(@PathVariable("id") String id, @RequestBody EmployeeDto employeeDto) {
+        return employeeReactiveService.updateEmployee(id, employeeDto);
+    }
 }

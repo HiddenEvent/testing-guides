@@ -8,10 +8,12 @@ import me.ricky.guides.testingguides.repository.EmployeeReactiveRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 @Service
 @RequiredArgsConstructor
 public class EmployeeReactiveServiceImpl implements EmployeeReactiveService {
     private final EmployeeReactiveRepository employeeReactiveRepository;
+
     @Override
     public Mono<EmployeeDto> saveEmployee(EmployeeDto dto) {
         EmployeeDoc doc = EmployeeMapper.toDoc(dto);
@@ -32,5 +34,17 @@ public class EmployeeReactiveServiceImpl implements EmployeeReactiveService {
         return employeeReactiveRepository.findAll()
                 .map(EmployeeMapper::toDto)
                 .switchIfEmpty(Flux.empty());
+    }
+
+    @Override
+    public Mono<EmployeeDto> updateEmployee(String id, EmployeeDto employeeDto) {
+        Mono<EmployeeDoc> employeeMono = employeeReactiveRepository.findById(id);
+        Mono<EmployeeDoc> updatedEmployee = employeeMono.flatMap(employeeDoc -> {
+            employeeDoc.setFirstName(employeeDto.getFirstName());
+            employeeDoc.setLastName(employeeDto.getLastName());
+            employeeDoc.setEmail(employeeDto.getEmail());
+            return employeeReactiveRepository.save(employeeDoc);
+        });
+        return updatedEmployee.map(EmployeeMapper::toDto);
     }
 }
