@@ -17,4 +17,11 @@ public class EmployeeReactiveServiceImpl implements EmployeeReactiveService {
         return employeeReactiveRepository.save(doc)
                 .map(EmployeeMapper::toDto);
     }
+
+    @Override
+    public Mono<EmployeeDto> getEmployeeById(String id) {
+
+        return employeeReactiveRepository.findById(id)
+                .map(EmployeeMapper::toDto);
+    }
 }

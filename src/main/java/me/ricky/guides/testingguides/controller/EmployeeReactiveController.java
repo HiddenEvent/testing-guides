@@ -3,10 +3,7 @@ package me.ricky.guides.testingguides.controller;
 import lombok.RequiredArgsConstructor;
 import me.ricky.guides.testingguides.dto.EmployeeDto;
 import me.ricky.guides.testingguides.service.EmployeeReactiveService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RestController
@@ -17,5 +14,9 @@ public class EmployeeReactiveController {
     @PostMapping
     public Mono<EmployeeDto> saveEmployee(@RequestBody EmployeeDto employeeDto) {
         return employeeReactiveService.saveEmployee(employeeDto);
+    }
+    @GetMapping("{id}")
+    public Mono<EmployeeDto> getEmployeeById(@PathVariable("id") String id) {
+        return employeeReactiveService.getEmployeeById(id);
     }
 }

@@ -5,4 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface EmployeeReactiveService {
     Mono<EmployeeDto> saveEmployee(EmployeeDto employeeDto);
+    Mono<EmployeeDto> getEmployeeById(String id);
 }
