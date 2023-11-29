@@ -47,4 +47,9 @@ public class EmployeeReactiveServiceImpl implements EmployeeReactiveService {
         });
         return updatedEmployee.map(EmployeeMapper::toDto);
     }
+
+    @Override
+    public Mono<Void> deleteEmployee(String id) {
+        return employeeReactiveRepository.deleteById(id);
+    }
 }

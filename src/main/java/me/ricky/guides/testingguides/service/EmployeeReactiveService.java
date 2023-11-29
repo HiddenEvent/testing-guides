@@ -9,4 +9,5 @@ public interface EmployeeReactiveService {
     Mono<EmployeeDto> getEmployeeById(String id);
     Flux<EmployeeDto> getAllEmployees();
     Mono<EmployeeDto> updateEmployee(String id, EmployeeDto employeeDto);
+    Mono<Void> deleteEmployee(String id);
 }

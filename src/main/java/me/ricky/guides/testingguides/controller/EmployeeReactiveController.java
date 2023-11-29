@@ -28,4 +28,8 @@ public class EmployeeReactiveController {
     public Mono<EmployeeDto> updateEmployee(@PathVariable("id") String id, @RequestBody EmployeeDto employeeDto) {
         return employeeReactiveService.updateEmployee(id, employeeDto);
     }
+    @DeleteMapping("{id}")
+    public Mono<Void> deleteEmployee(@PathVariable("id") String id) {
+        return employeeReactiveService.deleteEmployee(id);
+    }
 }
