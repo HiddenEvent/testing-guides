@@ -41,7 +41,11 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.8.1"
     testImplementation "org.testcontainers:testcontainers:1.19.3"
     testImplementation "org.testcontainers:junit-jupiter:1.19.3"
+    /* mysql testContainer 사용*/
     testImplementation "org.testcontainers:mysql:1.19.3"
+    /* mongo testContainer 사용 [https://java.testcontainers.org/modules/databases/mongodb/]*/
+    testImplementation "org.testcontainers:mongodb:1.19.3"
+
     /* non-blocking 테스트용 */
     testImplementation 'io.projectreactor:reactor-test'
 }
