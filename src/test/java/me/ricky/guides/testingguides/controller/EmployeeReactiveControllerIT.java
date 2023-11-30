@@ -88,8 +88,8 @@ class EmployeeReactiveControllerIT {
                 .lastName("Kim1")
                 .email("aa1@a.com")
                 .build();
-        BDDMockito.given(employeeReactiveService.getAllEmployees())
-                .willReturn(Mono.just(employeeDto).flux().concatWith(Mono.just(employeeDto1).flux()));
+        EmployeeDto savedEmployee = employeeReactiveService.saveEmployee(employeeDto).block();
+        EmployeeDto savedEmployee1 = employeeReactiveService.saveEmployee(employeeDto1).block();
 
         //when
         WebTestClient.ResponseSpec response = webTestClient.get()
@@ -102,12 +102,14 @@ class EmployeeReactiveControllerIT {
                 .expectBody()
                 .consumeWith(System.out::println)
                 .jsonPath("$.size()").isEqualTo(2)
-                .jsonPath("$.[0].firstName").isEqualTo(employeeDto.getFirstName())
-                .jsonPath("$.[0].lastName").isEqualTo(employeeDto.getLastName())
-                .jsonPath("$.[0].email").isEqualTo(employeeDto.getEmail())
-                .jsonPath("$.[1].firstName").isEqualTo(employeeDto1.getFirstName())
-                .jsonPath("$.[1].lastName").isEqualTo(employeeDto1.getLastName())
-                .jsonPath("$.[1].email").isEqualTo(employeeDto1.getEmail());
+                .jsonPath("$.[0].id").isEqualTo(savedEmployee.getId())
+                .jsonPath("$.[0].firstName").isEqualTo(savedEmployee.getFirstName())
+                .jsonPath("$.[0].lastName").isEqualTo(savedEmployee.getLastName())
+                .jsonPath("$.[0].email").isEqualTo(savedEmployee.getEmail())
+                .jsonPath("$.[1].id").isEqualTo(savedEmployee1.getId())
+                .jsonPath("$.[1].firstName").isEqualTo(savedEmployee1.getFirstName())
+                .jsonPath("$.[1].lastName").isEqualTo(savedEmployee1.getLastName())
+                .jsonPath("$.[1].email").isEqualTo(savedEmployee1.getEmail());
 
     }
 
