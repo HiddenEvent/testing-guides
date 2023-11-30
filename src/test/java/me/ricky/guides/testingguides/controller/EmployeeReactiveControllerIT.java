@@ -1,7 +1,9 @@
 package me.ricky.guides.testingguides.controller;
 
 import me.ricky.guides.testingguides.dto.EmployeeDto;
+import me.ricky.guides.testingguides.repository.EmployeeReactiveRepository;
 import me.ricky.guides.testingguides.service.EmployeeReactiveService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -21,7 +23,13 @@ class EmployeeReactiveControllerIT {
     private EmployeeReactiveService employeeReactiveService;
     @Autowired
     private WebTestClient webTestClient;
-
+    @Autowired
+    private EmployeeReactiveRepository employeeReactiveRepository;
+    @BeforeEach
+    void setup() {
+        System.out.println("setup");
+        employeeReactiveRepository.deleteAll().subscribe();
+    }
 
     @Test
     void saveEmployee() {
