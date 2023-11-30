@@ -159,13 +159,16 @@ class EmployeeReactiveControllerIT {
     @Test
     void deleteEmployee() {
         //given
-        String employeeId = "123";
-        BDDMockito.given(employeeReactiveService.deleteEmployee(employeeId))
-                .willReturn(Mono.empty());
+        EmployeeDto employeeDto = EmployeeDto.builder()
+                .firstName("Ricky")
+                .lastName("Kim")
+                .email("aa@a.com")
+                .build();
+        EmployeeDto savedEmployee = employeeReactiveService.saveEmployee(employeeDto).block();
 
         //when
         WebTestClient.ResponseSpec response = webTestClient.delete()
-                .uri(EmployeeReactiveController.BASE_URL + "/" + employeeId)
+                .uri(EmployeeReactiveController.BASE_URL + "/{id}", savedEmployee.getId())
                 .exchange();
 
         //then
