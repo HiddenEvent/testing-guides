@@ -25,6 +25,7 @@ class EmployeeReactiveControllerIT {
     private WebTestClient webTestClient;
     @Autowired
     private EmployeeReactiveRepository employeeReactiveRepository;
+
     @BeforeEach
     void setup() {
         System.out.println("setup");
@@ -124,30 +125,35 @@ class EmployeeReactiveControllerIT {
     @Test
     void updateEmployee() {
         //given
-        String employeeId = "123";
-        EmployeeDto updatedEmployee = EmployeeDto.builder()
+        EmployeeDto employeeDto = EmployeeDto.builder()
                 .firstName("Ricky")
                 .lastName("Kim")
                 .email("aa@a.com")
                 .build();
-        BDDMockito.given(employeeReactiveService.updateEmployee(ArgumentMatchers.any(String.class), ArgumentMatchers.any(EmployeeDto.class)))
-                .willReturn(Mono.just(updatedEmployee));
+        EmployeeDto savedEmployee = employeeReactiveService.saveEmployee(employeeDto).block();
+        EmployeeDto updatedEmployeeDto = EmployeeDto.builder()
+                .firstName("UPDATED Ricky")
+                .lastName("UPDATED Kim")
+                .email("upd@a.com")
+                .build();
+
 
         //when
         WebTestClient.ResponseSpec response = webTestClient.put()
-                .uri(EmployeeReactiveController.BASE_URL + "/" + employeeId)
+                .uri(EmployeeReactiveController.BASE_URL + "/{id}", savedEmployee.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(Mono.just(updatedEmployee), EmployeeDto.class)
+                .body(Mono.just(updatedEmployeeDto), EmployeeDto.class)
                 .exchange();
 
         //then
         response.expectStatus().isOk()
                 .expectBody()
                 .consumeWith(System.out::println)
-                .jsonPath("$.firstName").isEqualTo(updatedEmployee.getFirstName())
-                .jsonPath("$.lastName").isEqualTo(updatedEmployee.getLastName())
-                .jsonPath("$.email").isEqualTo(updatedEmployee.getEmail());
+                .jsonPath("$.id").isEqualTo(savedEmployee.getId())
+                .jsonPath("$.firstName").isEqualTo(updatedEmployeeDto.getFirstName())
+                .jsonPath("$.lastName").isEqualTo(updatedEmployeeDto.getLastName())
+                .jsonPath("$.email").isEqualTo(updatedEmployeeDto.getEmail());
     }
 
     @Test
