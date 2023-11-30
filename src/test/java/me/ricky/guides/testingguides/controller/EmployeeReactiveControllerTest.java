@@ -82,6 +82,38 @@ class EmployeeReactiveControllerTest {
 
     @Test
     void getAllEmployees() {
+        //given
+        EmployeeDto employeeDto = EmployeeDto.builder()
+                .firstName("Ricky")
+                .lastName("Kim")
+                .email("aa@a.com")
+                .build();
+        EmployeeDto employeeDto1 = EmployeeDto.builder()
+                .firstName("Ricky1")
+                .lastName("Kim1")
+                .email("aa1@a.com")
+                .build();
+        BDDMockito.given(employeeReactiveService.getAllEmployees())
+                .willReturn(Mono.just(employeeDto).flux().concatWith(Mono.just(employeeDto1).flux()));
+
+        //when
+        WebTestClient.ResponseSpec response = webTestClient.get()
+                .uri(EmployeeReactiveController.BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange();
+
+        //then
+        response.expectStatus().isOk()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("$.size()").isEqualTo(2)
+                .jsonPath("$.[0].firstName").isEqualTo(employeeDto.getFirstName())
+                .jsonPath("$.[0].lastName").isEqualTo(employeeDto.getLastName())
+                .jsonPath("$.[0].email").isEqualTo(employeeDto.getEmail())
+                .jsonPath("$.[1].firstName").isEqualTo(employeeDto1.getFirstName())
+                .jsonPath("$.[1].lastName").isEqualTo(employeeDto1.getLastName())
+                .jsonPath("$.[1].email").isEqualTo(employeeDto1.getEmail());
+
     }
 
     @Test
