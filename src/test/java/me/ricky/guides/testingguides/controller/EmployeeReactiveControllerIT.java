@@ -32,9 +32,6 @@ class EmployeeReactiveControllerIT {
                 .email("aa@a.com")
                 .build();
 
-        BDDMockito.given(employeeReactiveService.saveEmployee(ArgumentMatchers.any(EmployeeDto.class)))
-                .willReturn(Mono.just(employeeDto));
-
         //when
         WebTestClient.ResponseSpec response = webTestClient.post().uri(EmployeeReactiveController.BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -55,27 +52,26 @@ class EmployeeReactiveControllerIT {
     @Test
     void getEmployeeById() {
         //given
-        String employeeId = "123";
         EmployeeDto employeeDto = EmployeeDto.builder()
                 .firstName("Ricky")
                 .lastName("Kim")
                 .email("aa@a.com")
                 .build();
-        BDDMockito.given(employeeReactiveService.getEmployeeById(employeeId))
-                .willReturn(Mono.just(employeeDto));
+        EmployeeDto savedEmployee = employeeReactiveService.saveEmployee(employeeDto).block();
 
         //when
         WebTestClient.ResponseSpec response = webTestClient.get()
-                .uri(EmployeeReactiveController.BASE_URL + "/" + employeeId)
+                .uri(EmployeeReactiveController.BASE_URL + "/{id}", savedEmployee.getId())
                 .exchange();
 
         //then
         response.expectStatus().isOk()
                 .expectBody()
                 .consumeWith(System.out::println)
-                .jsonPath("$.firstName").isEqualTo(employeeDto.getFirstName())
-                .jsonPath("$.lastName").isEqualTo(employeeDto.getLastName())
-                .jsonPath("$.email").isEqualTo(employeeDto.getEmail());
+                .jsonPath("$.id").isEqualTo(savedEmployee.getId())
+                .jsonPath("$.firstName").isEqualTo(savedEmployee.getFirstName())
+                .jsonPath("$.lastName").isEqualTo(savedEmployee.getLastName())
+                .jsonPath("$.email").isEqualTo(savedEmployee.getEmail());
 
     }
 
