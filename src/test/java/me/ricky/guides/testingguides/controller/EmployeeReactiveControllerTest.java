@@ -15,6 +15,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = EmployeeReactiveController.class)
 class EmployeeReactiveControllerTest {
@@ -54,6 +55,29 @@ class EmployeeReactiveControllerTest {
 
     @Test
     void getEmployeeById() {
+        //given
+        String employeeId = "123";
+        EmployeeDto employeeDto = EmployeeDto.builder()
+                .firstName("Ricky")
+                .lastName("Kim")
+                .email("aa@a.com")
+                .build();
+        BDDMockito.given(employeeReactiveService.getEmployeeById(employeeId))
+                .willReturn(Mono.just(employeeDto));
+
+        //when
+        WebTestClient.ResponseSpec response = webTestClient.get()
+                .uri(EmployeeReactiveController.BASE_URL + "/" + employeeId)
+                .exchange();
+
+        //then
+        response.expectStatus().isOk()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("$.firstName").isEqualTo(employeeDto.getFirstName())
+                .jsonPath("$.lastName").isEqualTo(employeeDto.getLastName())
+                .jsonPath("$.email").isEqualTo(employeeDto.getEmail());
+
     }
 
     @Test
