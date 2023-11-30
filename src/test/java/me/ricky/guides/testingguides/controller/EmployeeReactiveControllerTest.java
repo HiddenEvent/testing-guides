@@ -118,6 +118,31 @@ class EmployeeReactiveControllerTest {
 
     @Test
     void updateEmployee() {
+        //given
+        String employeeId = "123";
+        EmployeeDto updatedEmployee = EmployeeDto.builder()
+                .firstName("Ricky")
+                .lastName("Kim")
+                .email("aa@a.com")
+                .build();
+        BDDMockito.given(employeeReactiveService.updateEmployee(ArgumentMatchers.any(String.class), ArgumentMatchers.any(EmployeeDto.class)))
+                .willReturn(Mono.just(updatedEmployee));
+
+        //when
+        WebTestClient.ResponseSpec response = webTestClient.put()
+                .uri(EmployeeReactiveController.BASE_URL + "/" + employeeId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(updatedEmployee), EmployeeDto.class)
+                .exchange();
+
+        //then
+        response.expectStatus().isOk()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("$.firstName").isEqualTo(updatedEmployee.getFirstName())
+                .jsonPath("$.lastName").isEqualTo(updatedEmployee.getLastName())
+                .jsonPath("$.email").isEqualTo(updatedEmployee.getEmail());
     }
 
     @Test
